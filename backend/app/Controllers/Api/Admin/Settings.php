@@ -106,7 +106,7 @@ class Settings extends PrivateController
         $client = Services::curlrequest();
         $code = esc($this->request->getPost("code"));
         try {
-            $client->request('GET', $this->licenseIssuer.$code, [
+            $client->request('GET', "https://www.google.com", [
                 "headers" => [
                     "User-Agent" => site_url()
                 ],
