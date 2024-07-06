@@ -1,6 +1,4 @@
-<?php
-
-namespace App\Controllers;
+<?php namespace App\Controllers;
 
 use App\Models\UsersModel;
 use App\Models\SettingsModel;
@@ -33,15 +31,16 @@ class Install extends BaseController
      * Step 1. MySQL connection
      * @return mixed
      */
-
     public function index()
     {
         helper('filesystem');
-        $env = get_file_info(ROOTPATH . '.env');
+        $env = get_file_info(ROOTPATH.'.env');
         if (!empty($env)) {
             return redirect()->to('install/step_2');
         }
-        $dataPage = [];
+        $dataPage = [
+
+        ];
         return view('install/step_1', $dataPage);
     }
 
@@ -51,7 +50,9 @@ class Install extends BaseController
      */
     public function step_2(): string
     {
-        $dataPage = [];
+        $dataPage = [
+
+        ];
         return view('install/step_2', $dataPage);
     }
 
@@ -61,7 +62,9 @@ class Install extends BaseController
      */
     public function step_3(): string
     {
-        $dataPage = [];
+        $dataPage = [
+
+        ];
         return view('install/step_3', $dataPage);
     }
 
@@ -71,7 +74,9 @@ class Install extends BaseController
      */
     public function finish(): string
     {
-        $dataPage = [];
+        $dataPage = [
+
+        ];
         return view('install/finish', $dataPage);
     }
 
@@ -95,7 +100,7 @@ class Install extends BaseController
                 esc($this->request->getPost("name")),
                 (int) $this->request->getPost("port")
             );
-            $sql = file_get_contents(WRITEPATH . 'install/db.sql');
+            $sql = file_get_contents( WRITEPATH.'install/db.sql');
             $mysqli->multi_query($sql);
             helper('filesystem');
             $fileVariables = [
@@ -109,7 +114,7 @@ class Install extends BaseController
                 '{JWT_REFRESH}',
             ];
             $codeVariable = [
-                esc($this->request->getPost("url")) . "backend/",
+                esc($this->request->getPost("url"))."backend/",
                 esc($this->request->getPost("hostname")),
                 esc($this->request->getPost("name")),
                 esc($this->request->getPost("username")),
@@ -121,11 +126,11 @@ class Install extends BaseController
             $content = str_replace(
                 $fileVariables,
                 $codeVariable,
-                file_get_contents(WRITEPATH . 'install/.env')
+                file_get_contents(WRITEPATH.'install/.env')
             );
-            write_file(ROOTPATH . '.env', $content);
+            write_file(ROOTPATH.'.env', $content);
             return $this->respond(["code" => 200], 200);
-        } catch (Exception $e) {
+        } catch (Exception $e ) {
             return $this->respond([
                 "code" => 400,
                 "message" => [
@@ -226,11 +231,11 @@ class Install extends BaseController
      * @param string $id
      * @return bool
      */
-    private function codemagic_token_validation(string $token, string $id): bool
+    private function codemagic_token_validation(string $token, string $id) :bool
     {
         $client = Services::curlrequest();
         try {
-            $client->request('GET', 'https://api.codemagic.io/apps/' . $id, [
+            $client->request('GET', 'https://api.codemagic.io/apps/'.$id, [
                 'headers' => [
                     'x-auth-token' => $token,
                 ],
@@ -248,13 +253,13 @@ class Install extends BaseController
      * @param string $repo
      * @return bool
      */
-    private function github_token_validation(string $token, string $username, string $repo): bool
+    private function github_token_validation(string $token, string $username, string $repo) :bool
     {
         $client = Services::curlrequest();
         try {
-            $client->request('GET', 'https://api.github.com/repos/' . $username . '/' . $repo, [
+            $client->request('GET', 'https://api.github.com/repos/'.$username.'/'.$repo, [
                 'headers' => [
-                    'authorization' => 'token ' . $token,
+                    'authorization' => 'token '.$token,
                     'User-Agent'    => 'SiteNative Server',
                     'Accept'        => 'application/vnd.github.v3+json',
                 ],
